@@ -35,6 +35,11 @@ function processData() {
     // Default: leave new columns blank.
     let newCol1 = "";
     let newCol2 = "";
+    let newCol3 = "";
+    let newCol4 = "";
+    let newCol5 = "";
+    let newCol6 = "";
+    let newCol7 = "";
 
     // Ensure there is at least a 2nd column for the unique id.
     if (row.length >= 2) {
@@ -55,7 +60,7 @@ function processData() {
             year1 = "20" + year1;
           }
           // Table1 time is in column 22 (index 21). If missing, default to "00:00".
-          const timeStr1 = row[25] || "00:00";
+          const timeStr1 = row[24] || row[25];
           // Build a string that can be parsed by the Date constructor.
           const table1DateTimeStr = `${day1} ${month1} ${year1} ${timeStr1}`;
           const table1DateTime = new Date(table1DateTimeStr);
@@ -80,6 +85,11 @@ function processData() {
                 newCol1 = "YES";
                 // Table2's 6th column (index 5) is used for the second new column.
                 newCol2 = pharmRow[5] || "";
+                newCol3 = pharmRow[1] || "";
+                newCol4 = pharmRow[3] || "";
+                newCol5 = pharmRow[4] || "";
+                newCol6 = row[0];
+                newCol7 = row[25];
               }
             }
           }
@@ -88,7 +98,7 @@ function processData() {
     }
     
     // Append the new columns to the current row.
-    row.push(newCol1, newCol2);
+    row.push(newCol1, newCol2, newCol3, newCol4, newCol5, newCol6, newCol7);
   });
 
   // --- Build the HTML table to display the result ---
