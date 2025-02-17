@@ -108,3 +108,82 @@ function processData() {
   });
 }
 
+function copyTableToClipboard() {
+  // Get the table element
+  const table = document.getElementById('outputTable');
+  
+  // Get the button element (assuming it's the element that triggered the function)
+  const button = event.target;
+  
+  // Check if table exists
+  if (!table) {
+      showTemporaryMessage(button, 'Table not found!', 'red');
+      return;
+  }
+  
+  // Create a temporary textarea to hold the text
+  const tempTextArea = document.createElement('textarea');
+  
+  // Convert table to text
+  let tableText = '';
+  
+  // Iterate through rows
+  for (let i = 0; i < table.rows.length; i++) {
+      let rowText = '';
+      
+      // Iterate through cells in each row
+      for (let j = 0; j < table.rows[i].cells.length; j++) {
+          // Add cell text, separated by tabs
+          rowText += table.rows[i].cells[j].textContent;
+          
+          // Add a tab between cells, but not after the last cell
+          if (j < table.rows[i].cells.length - 1) {
+              rowText += '\t';
+          }
+      }
+      
+      // Add row text with a newline
+      tableText += rowText + '\n';
+  }
+  
+  // Set the textarea value to the table text
+  tempTextArea.value = tableText;
+  
+  // Append to body (required for some browsers)
+  document.body.appendChild(tempTextArea);
+  
+  // Select the text
+  tempTextArea.select();
+  tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+  
+  // Copy the text to clipboard
+  try {
+      document.execCommand('copy');
+      showTemporaryMessage(button, 'Copied!', 'green');
+  } catch (err) {
+      showTemporaryMessage(button, 'Copy failed', 'red');
+  }
+  
+  // Remove the temporary textarea
+  document.body.removeChild(tempTextArea);
+}
+
+function showTemporaryMessage(referenceElement, message, color) {
+  // Create message element
+  const messageElement = document.createElement('span');
+  messageElement.textContent = message;
+  messageElement.style.color = color;
+  messageElement.style.marginLeft = '10px';
+  messageElement.style.transition = 'opacity 0.5s';
+  
+  // Insert message next to the button
+  referenceElement.parentNode.insertBefore(messageElement, referenceElement.nextSibling);
+  
+  // Remove message after 2 seconds
+  setTimeout(() => {
+      messageElement.style.opacity = '0';
+      setTimeout(() => {
+          messageElement.remove();
+      }, 500);
+  }, 2000);
+}
